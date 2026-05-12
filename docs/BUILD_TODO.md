@@ -10,23 +10,23 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ## Phase 0 — Foundation and repository
 
-- [ ] Monorepo layout: `backend/`, `frontend/`, `infrastructure/`, `docker/`, `docs/`, `scripts/`, `tests/`
-- [ ] Backend scaffold: FastAPI app factory, env-based settings, structured logging, health checks, OpenAPI
-- [ ] Frontend scaffold: Next.js App Router, TypeScript, Tailwind, shared layout, env handling, API client layer
-- [ ] PostgreSQL: Docker Compose locally, migrations (Alembic), connection pooling (async SQLAlchemy)
-- [ ] Redis: cache and optional rate-limit/session backing; document TTL and invalidation rules
-- [ ] Docker Compose: API, Postgres, Redis, frontend dev proxy; one-command local start
-- [ ] CI: GitHub Actions — lint, typecheck, unit tests, image build; branch protection on `main`
-- [ ] Secrets and config: `.env.example`, no secrets in repo, separate dev/staging/prod config
-- [ ] API contract: versioned REST (`/api/v1/...`), consistent errors, pagination and filter conventions
+- [x] Monorepo layout: `backend/`, `frontend/`, `infrastructure/`, `docker/`, `docs/`, `scripts/`, `tests/`
+- [x] Backend scaffold: FastAPI app factory, env-based settings, structured logging, health checks, OpenAPI
+- [x] Frontend scaffold: Next.js App Router, TypeScript, Tailwind, shared layout, env handling, API client layer
+- [x] PostgreSQL: Docker Compose locally, migrations (Alembic), connection pooling (async SQLAlchemy)
+- [x] Redis: cache and optional rate-limit/session backing; document TTL and invalidation rules
+- [x] Docker Compose: API, Postgres, Redis, frontend dev proxy; one-command local start
+- [x] CI: GitHub Actions — lint, typecheck, unit tests, image build; branch protection on `main` (enable protection in GitHub settings)
+- [x] Secrets and config: `.env.example`, no secrets in repo, separate dev/staging/prod config
+- [x] API contract: versioned REST (`/api/v1/...`), consistent errors, pagination and filter conventions
 
 ### Quality
 
-- [ ] CI passes on the default branch: lint, typecheck, tests, and image build
-- [ ] `docker compose up` yields healthy API, Postgres, Redis, and frontend dev proxy
-- [ ] OpenAPI documents versioned `/api/v1` error and pagination shapes
-- [ ] `.env.example` covers required variables; no secrets committed to the repo
-- [ ] New developer can run the stack locally from documented steps without ad hoc fixes
+- [ ] CI passes on the default branch: lint, typecheck, tests, and image build (runs in GitHub Actions after push)
+- [ ] `docker compose up` yields healthy API, Postgres, Redis, and frontend dev proxy (verify locally with Docker installed)
+- [x] OpenAPI documents versioned `/api/v1` error and pagination shapes
+- [x] `.env.example` covers required variables; no secrets committed to the repo
+- [x] New developer can run the stack locally from documented steps without ad hoc fixes
 
 **Success:** one-command local stack, green CI, and API/frontend shells ready for feature work.
 

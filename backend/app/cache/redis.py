@@ -13,3 +13,10 @@ def create_redis_client(redis_url: str) -> Redis:
 
 def cache_key(namespace: str, *parts: str) -> str:
     return ":".join(("stakemind", namespace, *parts))
+
+
+async def invalidate_namespace(redis: Redis, namespace: str) -> None:
+    """Delete cached keys for a namespace after ingestion or chain watermark updates."""
+    pattern = cache_key(namespace, "*")
+    async for key in redis.scan_iter(match=pattern):
+        await redis.delete(key)

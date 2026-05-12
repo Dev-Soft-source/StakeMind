@@ -17,8 +17,19 @@ Validator intelligence and staking optimization platform for the BitTensor ecosy
 docker compose up --build
 ```
 
+On Windows PowerShell you can also run `scripts/start-stack.ps1 -Build`.
+
 3. Open the app at `http://localhost:3000`.
 4. API docs live at `http://localhost:8000/api/v1/docs`.
+5. Shared API contracts are documented at `http://localhost:8000/api/v1/contracts/pagination`.
+
+## Environment files
+
+- `.env.example` for local development
+- `.env.staging.example` for staging deployments
+- `.env.production.example` for production deployments
+
+Do not commit real secrets. `.env` files stay local and are ignored by git.
 
 ## Run services without Docker
 
@@ -44,5 +55,11 @@ npm run dev
 
 ```bash
 cd backend && ruff check . && pytest
-cd frontend && npm run lint && npm run build
+cd frontend && npm run lint && npm run typecheck && npm run build
 ```
+
+## CI and branch protection
+
+GitHub Actions runs backend lint/tests, frontend lint/typecheck/build, and Docker image builds on pushes and pull requests.
+
+Enable branch protection on `main` in GitHub repository settings so pull requests must pass the `CI` workflow before merge.
