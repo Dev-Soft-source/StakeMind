@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: stakemind
+      POSTGRES_PASSWORD: stakemind
+      POSTGRES_DB: stakemind
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stakemind -d stakemind"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.backend
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://stakemind:stakemind@postgres:5432/stakemind
+      REDIS_URL: redis://redis:6379/0
+      CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      API_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

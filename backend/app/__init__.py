@@ -1,0 +1,1 @@
+"""StakeMind FastAPI application package."""
