@@ -1,14 +1,26 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
+import { StakingActionModal } from "@/components/staking/StakingActionModal";
 import { useWallet } from "@/components/wallet/WalletProvider";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { fetchStakingPortfolio } from "@/lib/api/dashboard-client";
+import type { StakingAction } from "@/lib/api/staking";
 import { formatRao } from "@/lib/format";
+
+type PositionAction = {
+  action: StakingAction;
+  subnetId: number;
+  sourceValidatorHotkey?: string;
+  destValidatorHotkey?: string;
+  defaultAmountRao?: number;
+};
 
 export function StakingPanel() {
   const { walletAddress } = useWallet();
+  const [activeAction, setActiveAction] = useState<PositionAction | null>(null);
 
   const stakingQuery = useQuery({
     queryKey: ["staking", walletAddress],
@@ -79,11 +91,52 @@ export function StakingPanel() {
                   <p className="font-medium text-slate-50">{formatRao(position.amount_rao)}</p>
                   <p className="text-xs text-muted">Subnet {position.subnet_id}</p>
                   <p className="mt-1 break-all text-xs text-slate-400">{position.validator_hotkey}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveAction({
+                          action: "undelegate",
+                          subnetId: position.subnet_id,
+                          sourceValidatorHotkey: position.validator_hotkey,
+                          defaultAmountRao: position.amount_rao,
+                        })
+                      }
+                      className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-100 hover:border-teal-500"
+                    >
+                      Undelegate
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveAction({
+                          action: "redelegate",
+                          subnetId: position.subnet_id,
+                          sourceValidatorHotkey: position.validator_hotkey,
+                          defaultAmountRao: position.amount_rao,
+                        })
+                      }
+                      className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-100 hover:border-teal-500"
+                    >
+                      Redelegate
+                    </button>
+                  </div>
                 </div>
               ))
             )}
           </div>
         </div>
+      ) : null}
+      {activeAction ? (
+        <StakingActionModal
+          open
+          onClose={() => setActiveAction(null)}
+          action={activeAction.action}
+          subnetId={activeAction.subnetId}
+          sourceValidatorHotkey={activeAction.sourceValidatorHotkey}
+          destValidatorHotkey={activeAction.destValidatorHotkey}
+          defaultAmountRao={activeAction.defaultAmountRao}
+        />
       ) : null}
     </PanelCard>
   );

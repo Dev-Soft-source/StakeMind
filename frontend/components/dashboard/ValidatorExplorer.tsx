@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
+import { StakingActionModal } from "@/components/staking/StakingActionModal";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
 import { StatusRow } from "@/components/ui/StatusRow";
@@ -14,6 +15,7 @@ export function ValidatorExplorer() {
   const [subnetId, setSubnetId] = useState("");
   const [sort, setSort] = useState<"score" | "apy" | "hotkey">("score");
   const [selectedHotkey, setSelectedHotkey] = useState<string | null>(null);
+  const [delegateOpen, setDelegateOpen] = useState(false);
 
   const validatorsQuery = useQuery({
     queryKey: ["validators", search, subnetId, sort],
@@ -111,7 +113,23 @@ export function ValidatorExplorer() {
             <p>Uptime: {activeValidator.uptime_percent}%</p>
             <p>Reward consistency: {activeValidator.reward_consistency}</p>
           </div>
+          <button
+            type="button"
+            onClick={() => setDelegateOpen(true)}
+            className="mt-4 rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600"
+          >
+            Delegate to this validator
+          </button>
         </div>
+      ) : null}
+      {activeValidator ? (
+        <StakingActionModal
+          open={delegateOpen}
+          onClose={() => setDelegateOpen(false)}
+          action="delegate"
+          subnetId={activeValidator.subnet_id}
+          destValidatorHotkey={activeValidator.hotkey}
+        />
       ) : null}
     </PanelCard>
   );

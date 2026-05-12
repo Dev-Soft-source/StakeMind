@@ -33,14 +33,44 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   });
 
   if (!response.ok) {
-    const payload = (await response.json().catch(() => null)) as ApiErrorResponse | null;
-    throw new ApiClientError(
-      response.status,
-      payload?.error.code ?? "unknown_error",
-      payload?.error.message ?? response.statusText,
-      payload?.error.details,
-    );
+    const payload = (await response.json().catch(() => null)) as unknown;
+    const error = extractApiError(payload, response.statusText);
+    throw new ApiClientError(response.status, error.code, error.message, error.details);
   }
 
   return (await response.json()) as T;
+}
+
+function extractApiError(
+  payload: unknown,
+  fallbackMessage: string,
+): { code: string; message: string; details?: ApiErrorResponse["error"]["details"] } {
+  if (!payload || typeof payload !== "object") {
+    return { code: "unknown_error", message: fallbackMessage || "Request failed" };
+  }
+
+  const body = payload as Record<string, unknown>;
+  const structuredError = body.error;
+  if (structuredError && typeof structuredError === "object") {
+    const error = structuredError as ApiErrorResponse["error"];
+    return {
+      code: error.code ?? "unknown_error",
+      message: error.message ?? fallbackMessage ?? "Request failed",
+      details: error.details,
+    };
+  }
+
+  if (typeof body.detail === "string") {
+    return { code: "http_error", message: body.detail };
+  }
+
+  if (Array.isArray(body.detail)) {
+    return {
+      code: "validation_error",
+      message: "Request validation failed",
+      details: body.detail,
+    };
+  }
+
+  return { code: "unknown_error", message: fallbackMessage || "Request failed" };
 }

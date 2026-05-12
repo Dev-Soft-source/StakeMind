@@ -60,6 +60,18 @@ class Settings(BaseSettings):
         default=16,
         validation_alias="BITTENSOR_INGESTION_SUBNET_LIMIT",
     )
+    staking_transaction_ttl_seconds: int = Field(
+        default=900,
+        validation_alias="STAKING_TRANSACTION_TTL_SECONDS",
+    )
+    staking_confirmation_target_blocks: int = Field(
+        default=3,
+        validation_alias="STAKING_CONFIRMATION_TARGET_BLOCKS",
+    )
+    staking_enable_simulation: bool = Field(
+        default=True,
+        validation_alias="STAKING_ENABLE_SIMULATION",
+    )
 
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

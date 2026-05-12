@@ -122,3 +122,33 @@ class IngestionRun(Base):
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class StakingTransaction(Base, TimestampMixin):
+    __tablename__ = "staking_transactions"
+    __table_args__ = (
+        UniqueConstraint(
+            "wallet_address",
+            "idempotency_key",
+            name="uq_staking_transactions_wallet_idempotency",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    wallet_address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    action: Mapped[str] = mapped_column(String(32), nullable=False)
+    subnet_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    source_validator_hotkey: Mapped[str | None] = mapped_column(String(128))
+    dest_validator_hotkey: Mapped[str | None] = mapped_column(String(128))
+    amount_rao: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    unsigned_payload: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    simulation_result: Mapped[dict | None] = mapped_column(JSONB)
+    signed_extrinsic: Mapped[str | None] = mapped_column(Text)
+    tx_hash: Mapped[str | None] = mapped_column(String(128), index=True)
+    block_hash: Mapped[str | None] = mapped_column(String(128))
+    failure_reason: Mapped[str | None] = mapped_column(Text)
+    idempotency_key: Mapped[str | None] = mapped_column(String(255))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

@@ -79,18 +79,18 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ## Phase 3 — Core staking actions
 
-- [ ] Transaction building API: unsigned payloads for stake, unstake, redelegate; simulation where supported
-- [ ] Signing UX: preview, fees/params, explicit confirm; hardware wallet path if in scope
-- [ ] Submission and tracking: hash status, confirmations, failure reasons, idempotent submit handling
-- [ ] Audit logging: who, what, when, tx hash, outcome (no secrets)
-- [ ] Integration tests: full lifecycle on testnet or mocked RPC; timeout and partial-failure cases
+- [x] Transaction building API: unsigned payloads for stake, unstake, redelegate; simulation where supported
+- [x] Signing UX: preview, fees/params, explicit confirm; hardware wallet path if in scope
+- [x] Submission and tracking: hash status, confirmations, failure reasons, idempotent submit handling
+- [x] Audit logging: who, what, when, tx hash, outcome (no secrets)
+- [x] Integration tests: full lifecycle on testnet or mocked RPC; timeout and partial-failure cases
 
 ### Quality
 
-- [ ] Signing remains wallet-side only; backend returns unsigned payloads and never stores plaintext keys
-- [ ] Transaction preview and simulation run before every sign prompt; hardware wallet path covered if in scope
-- [ ] Audit log records every transaction attempt: who, what, when, hash, and outcome
-- [ ] Submit handling is idempotent; integration tests cover success, failure, and timeout paths
+- [x] Signing remains wallet-side only; backend returns unsigned payloads and never stores plaintext keys
+- [x] Transaction preview and simulation run before every sign prompt; hardware wallet path covered if in scope
+- [x] Audit log records every transaction attempt: who, what, when, hash, and outcome
+- [x] Submit handling is idempotent; integration tests cover success, failure, and timeout paths
 
 **Success:** users can stake, unstake, and redelegate with preview, confirmation, and tracked outcomes without breaking read-only dashboard flows.
 
