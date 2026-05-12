@@ -33,6 +33,38 @@ Do not commit real secrets. `.env` files stay local and are ignored by git.
 
 ## Run services without Docker
 
+### Database migrations
+
+`DATABASE_URL` must match a real PostgreSQL role. The app and Alembic load `.env` from the repo root and from `backend/.env`.
+
+If you use the default Compose credentials, bootstrap a local database once:
+
+```bash
+psql -U postgres -f scripts/init-local-postgres.sql
+```
+
+On Windows PowerShell:
+
+```powershell
+.\scripts\bootstrap-local-postgres.ps1
+```
+
+If you use an existing PostgreSQL installation, set `DATABASE_URL` in `.env` to that role instead. `postgresql://` and `postgresql+asyncpg://` both work; the app normalizes to `asyncpg`. You do not need `psycopg2` for migrations.
+
+```text
+postgresql+asyncpg://USER:PASSWORD@localhost:5432/DATABASE
+```
+
+Then run migrations from `backend/`:
+
+```bash
+cd backend
+python scripts/check_db_connection.py
+alembic upgrade head
+```
+
+On Windows PowerShell you can also run `backend/scripts/run_migrations.ps1` from any directory.
+
 ### Backend
 
 ```bash
@@ -57,6 +89,23 @@ npm run dev
 cd backend && ruff check . && pytest
 cd frontend && npm run lint && npm run typecheck && npm run build
 ```
+
+## Phase 1 artifacts
+
+Research and validation outputs live in `docs/phase1/`.
+
+Optional live RPC verification:
+
+```bash
+cd backend
+python scripts/verify_phase1.py
+```
+
+Read-only integration spike:
+
+- `GET /api/v1/integrations/subtensor/chain-head`
+- `POST /api/v1/integrations/subtensor/ingestion/chain-head-sync`
+- `python backend/scripts/run_chain_head_sync.py` after migrations
 
 ## CI and branch protection
 

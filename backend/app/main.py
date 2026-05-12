@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.settings = settings
 
     engine = create_async_engine(
-        settings.database_url,
+        settings.async_database_url(),
         pool_size=settings.db_pool_size,
         max_overflow=settings.db_max_overflow,
         pool_pre_ping=True,
@@ -54,7 +54,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=resolved.cors_origins,
+        allow_origins=resolved.cors_origin_list(),
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

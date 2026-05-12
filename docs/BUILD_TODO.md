@@ -34,18 +34,18 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ## Phase 1 — Research and validation
 
-- [ ] Map BitTensor staking flows: delegate, undelegate, redelegate, rewards, subnets
-- [ ] Competitive scan: dashboards, explorers, wallets; document pain points and gaps
-- [ ] Deliverables: competitor matrix, pain-point summary, positioning one-pager, architecture diagram
-- [ ] Draft data model: validators, subnets, stakes, rewards, wallet sessions (no private keys), audit events
-- [ ] Integration spike: read-only RPC/indexer calls with retries, timeouts, idempotent ingestion jobs
+- [x] Map BitTensor staking flows: delegate, undelegate, redelegate, rewards, subnets
+- [x] Competitive scan: dashboards, explorers, wallets; document pain points and gaps
+- [x] Deliverables: competitor matrix, pain-point summary, positioning one-pager, architecture diagram
+- [x] Draft data model: validators, subnets, stakes, rewards, wallet sessions (no private keys), audit events
+- [x] Integration spike: read-only RPC/indexer calls with retries, timeouts, idempotent ingestion jobs
 
 ### Quality
 
-- [ ] Competitor matrix and pain-point summary reviewed and signed off
-- [ ] Architecture diagram and draft data model reviewed (stakes, sessions, audit events; no private keys)
-- [ ] Read-only RPC spike demonstrates retries, timeouts, and bounded ingestion behavior
-- [ ] Staking flows documented end to end: delegate, undelegate, redelegate, rewards, subnets
+- [x] Competitor matrix and pain-point summary reviewed and signed off
+- [x] Architecture diagram and draft data model reviewed (stakes, sessions, audit events; no private keys)
+- [x] Read-only RPC spike demonstrates retries, timeouts, and bounded ingestion behavior
+- [x] Staking flows documented end to end: delegate, undelegate, redelegate, rewards, subnets
 
 **Success:** build scope, integrations, and data shape are validated before dashboard implementation.
 
