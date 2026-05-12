@@ -6,16 +6,16 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-6 py-10 sm:px-8">
-        <header className="mb-8 space-y-2 text-center sm:text-left">
+    <div className="min-h-screen w-full bg-background text-foreground">
+      <div className="flex min-h-screen w-full flex-col px-4 py-8 sm:px-6 lg:px-8">
+        <header className="mb-8 w-full space-y-2 text-left">
           <p className="text-sm font-medium uppercase tracking-[0.2em] text-accent">StakeMind</p>
-          <h1 className="text-3xl font-bold text-slate-50">Validator intelligence foundation</h1>
+          <h1 className="text-3xl font-bold text-slate-50">Validator intelligence dashboard</h1>
           <p className="text-sm text-muted">
-            Phase 0 scaffold for analytics, wallet visibility, and staking intelligence.
+            Compare validators, review staking exposure, and track rewards from stored snapshots.
           </p>
         </header>
-        <main className="flex flex-1 flex-col gap-4">{children}</main>
+        <main className="flex w-full flex-1 flex-col gap-4">{children}</main>
       </div>
     </div>
   );

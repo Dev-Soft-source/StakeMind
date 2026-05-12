@@ -55,23 +55,23 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ### Backend
 
-- [ ] API layer: BitTensor RPC client, aggregation, retry/backoff, sync jobs for validators and staking state
-- [ ] Read APIs: validators list/detail, staking positions by address, rewards summary, basic history
-- [ ] Persistence: normalized tables and indexes for list/filter/sort; summary tables if needed for list endpoints
-- [ ] Caching: Redis for validator catalog and heavy aggregates; keys tied to chain height or job watermark
+- [x] API layer: BitTensor RPC client, aggregation, retry/backoff, sync jobs for validators and staking state
+- [x] Read APIs: validators list/detail, staking positions by address, rewards summary, basic history
+- [x] Persistence: normalized tables and indexes for list/filter/sort; summary tables if needed for list endpoints
+- [x] Caching: Redis for validator catalog and heavy aggregates; keys tied to chain height or job watermark
 
 ### Frontend
 
-- [ ] Wallet connection: connect/disconnect, session UX, supported wallets; address visible, no key storage
-- [ ] Validator explorer: search, sort, filters, detail view
-- [ ] Staking visibility: positions, delegation breakdown, subnet exposure summary
-- [ ] Rewards dashboard: totals, trends (Recharts), time range selection
-- [ ] Historical tracking: charts and tables from stored snapshots, not live RPC on every page load
+- [x] Wallet connection: connect/disconnect, session UX, supported wallets; address visible, no key storage
+- [x] Validator explorer: search, sort, filters, detail view
+- [x] Staking visibility: positions, delegation breakdown, subnet exposure summary
+- [x] Rewards dashboard: totals, trends (Recharts), time range selection
+- [x] Historical tracking: charts and tables from stored snapshots, not live RPC on every page load
 
 ### Quality
 
-- [ ] AuthZ model: wallet address as identity; server never signs; scoped read access only
-- [ ] E2E smoke: connect wallet (or test address) → dashboard → validator detail → rewards
+- [x] AuthZ model: wallet address as identity; server never signs; scoped read access only
+- [x] E2E smoke: connect wallet (or test address) → dashboard → validator detail → rewards
 
 **Success:** users compare validators and track rewards without executing transactions.
 
