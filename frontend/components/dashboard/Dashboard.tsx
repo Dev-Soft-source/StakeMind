@@ -3,6 +3,7 @@
 import { useEffect, type ComponentType } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { AutomationPanel } from "@/components/dashboard/AutomationPanel";
 import { CompareHotkeysProvider } from "@/components/dashboard/CompareHotkeysContext";
 import { ForecastPanel } from "@/components/dashboard/ForecastPanel";
 import { PremiumPanel } from "@/components/dashboard/PremiumPanel";
@@ -21,6 +22,7 @@ type DashboardModule = ComponentType;
 const DASHBOARD_ROWS: readonly (readonly DashboardModule[])[] = [
   [WalletBar],
   [PremiumPanel],
+  [AutomationPanel],
   [ValidatorExplorer, StakingPanel, RewardsDashboard],
   [ValidatorRankingsPanel, RiskPanel, ValidatorComparePanel, ForecastPanel],
 ];
@@ -53,6 +55,9 @@ function DashboardContent() {
     }
 
     void queryClient.invalidateQueries({ queryKey: ["wallet-entitlements", walletAddress] });
+    void queryClient.invalidateQueries({ queryKey: ["automation-policy", walletAddress] });
+    void queryClient.invalidateQueries({ queryKey: ["automation-jobs", walletAddress] });
+    void queryClient.invalidateQueries({ queryKey: ["automation-incidents", walletAddress] });
     void queryClient.invalidateQueries({ queryKey: ["staking", walletAddress] });
     void queryClient.invalidateQueries({ queryKey: ["rewards-summary", walletAddress] });
     void queryClient.invalidateQueries({ queryKey: ["rewards-history", walletAddress] });

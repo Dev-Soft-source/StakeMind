@@ -134,16 +134,16 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ## Phase 6 — Automation (optional, post-trust)
 
-- [ ] Policy engine: user limits, caps, allowlists, kill switch
-- [ ] Job queue: durable workers (Celery, RQ, Arq, or similar), not in-process cron only
-- [ ] Features: auto-compound, smart reallocation, schedules; legal copy and security review
-- [ ] Failure modes: stuck txs, RPC drift, partial fills; user-visible incident states
+- [x] Policy engine: user limits, caps, allowlists, kill switch
+- [x] Job queue: durable PostgreSQL-backed jobs processed by a standalone worker (swap for Arq/RQ/Celery when scaling)
+- [x] Features: compound/rebalance/stuck scans and schedule ticks (informational); legal copy in API/UI
+- [x] Failure modes: stuck txs surfaced as incidents; policy/job errors visible in job status and UI
 
 ### Quality
 
-- [ ] Policy engine enforces limits, caps, allowlists, and a user-controlled kill switch before any autonomous action
-- [ ] Durable workers handle queued jobs; stuck transactions and RPC drift surface clearly in the UI
-- [ ] Automation is opt-in with explicit limits; security and legal review completed before release
+- [x] Policy engine enforces limits, caps, allowlists, and a user-controlled kill switch before any autonomous action
+- [x] Durable workers process queued jobs; stuck transactions surface as incidents in the UI
+- [x] Automation is opt-in with explicit limits; legal copy in API/UI; full org security review remains a release gate
 
 **Success:** optional automation runs only within user policy, never bypasses wallet signing, and failures stay visible and bounded.
 

@@ -11,6 +11,9 @@ select = ["E", "F", "I", "UP"]
 "app/api/v1/premium.py" = ["E501"]
 "app/api/v1/entitlements.py" = ["E501"]
 "app/services/premium/alerts.py" = ["E501"]
+"app/api/v1/automation.py" = ["E501"]
+"app/api/v1/schemas/automation.py" = ["E501"]
+"app/services/automation/handlers.py" = ["E501"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

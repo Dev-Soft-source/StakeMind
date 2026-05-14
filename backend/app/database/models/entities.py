@@ -282,3 +282,62 @@ class InAppNotification(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+
+
+class AutomationPolicy(Base):
+    __tablename__ = "automation_policies"
+
+    wallet_address: Mapped[str] = mapped_column(String(128), primary_key=True)
+    opt_in: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    kill_switch_active: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    max_amount_rao_per_action: Mapped[int] = mapped_column(BigInteger, nullable=False, default=1_000_000_000)
+    max_daily_jobs: Mapped[int] = mapped_column(Integer, nullable=False, default=48)
+    allowed_validator_hotkeys: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    allowed_subnet_ids: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    compound_threshold_rao: Mapped[int] = mapped_column(BigInteger, nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+    )
+
+
+class AutomationJob(Base):
+    __tablename__ = "automation_jobs"
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    wallet_address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    job_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    payload: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="pending")
+    scheduled_for: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    max_attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=3)
+    locked_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    error_message: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class AutomationIncident(Base):
+    __tablename__ = "automation_incidents"
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    wallet_address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    job_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("automation_jobs.id", ondelete="SET NULL"), nullable=True
+    )
+    severity: Mapped[str] = mapped_column(String(32), nullable=False)
+    code: Mapped[str] = mapped_column(String(64), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    meta: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
