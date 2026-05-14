@@ -26,5 +26,4 @@ try {
     Remove-Item Env:PGPASSWORD -ErrorAction SilentlyContinue
 }
 
-Write-Host "Created or updated role/database stakemind. DATABASE_URL in .env should remain:"
-Write-Host "postgresql://postgres:Radu5443043gis.@localhost:5432/stakemind"
+Write-Host "Created or updated role/database stakemind. Set DATABASE_URL in .env to match your PostgreSQL user (see .env.example)."

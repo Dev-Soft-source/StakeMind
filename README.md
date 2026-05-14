@@ -31,6 +31,8 @@ On Windows PowerShell you can also run `scripts/start-stack.ps1 -Build`.
 
 Do not commit real secrets. `.env` files stay local and are ignored by git.
 
+For API hardening and the non-custodial trust model, see [docs/security-and-trust.md](docs/security-and-trust.md).
+
 ## Run services without Docker
 
 ### Database migrations

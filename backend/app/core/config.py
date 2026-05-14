@@ -16,6 +16,7 @@ class Settings(BaseSettings):
         env_file=ENV_FILES,
         env_file_encoding="utf-8",
         extra="ignore",
+        populate_by_name=True,
     )
 
     app_name: str = "StakeMind API"
@@ -80,6 +81,10 @@ class Settings(BaseSettings):
         default=300,
         validation_alias="INTELLIGENCE_CACHE_TTL_SECONDS",
     )
+    rate_limit_enabled: bool = Field(default=False, validation_alias="RATE_LIMIT_ENABLED")
+    rate_limit_per_minute: int = Field(default=120, validation_alias="RATE_LIMIT_PER_MINUTE")
+    trust_x_forwarded_for: bool = Field(default=False, validation_alias="TRUST_X_FORWARDED_FOR")
+    security_hsts_enabled: bool = Field(default=False, validation_alias="SECURITY_HSTS_ENABLED")
 
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

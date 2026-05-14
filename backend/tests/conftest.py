@@ -15,7 +15,7 @@ from app.main import create_app
 def test_settings() -> Settings:
     return Settings(
         environment="test",
-        database_url="postgresql://postgres:Radu5443043gis.@localhost:5432/stakemind",
+        database_url="postgresql://stakemind:stakemind@localhost:5432/stakemind",
         redis_url="redis://localhost:6379/0",
     )
 

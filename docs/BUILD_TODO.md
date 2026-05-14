@@ -153,9 +153,9 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ### Security and trust
 
-- [ ] Input validation on all APIs; rate limiting; CORS and security headers
-- [ ] Security testing: sessions, injection, unauthorized reads, abuse of tx endpoints
-- [ ] Public docs: non-custodial model, what is stored, what is never stored
+- [x] Input validation on all APIs; rate limiting; CORS and security headers
+- [x] Security testing: sessions, injection, unauthorized reads, abuse of tx endpoints
+- [x] Public docs: non-custodial model, what is stored, what is never stored
 
 ### Testing
 

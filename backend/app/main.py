@@ -13,13 +13,14 @@ from app.cache.redis import create_redis_client
 from app.core.config import Settings, get_settings
 from app.core.logging import configure_logging
 from app.database.session import create_session_factory
+from app.middleware.rate_limit import RateLimitMiddleware
+from app.middleware.security_headers import SecurityHeadersMiddleware
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    settings = get_settings()
+    settings: Settings = app.state.settings
     configure_logging(settings)
-    app.state.settings = settings
 
     engine = create_async_engine(
         settings.async_database_url(),
@@ -51,6 +52,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         docs_url=f"{resolved.api_v1_prefix}/docs",
         redoc_url=f"{resolved.api_v1_prefix}/redoc",
     )
+    app.state.settings = resolved
 
     app.add_middleware(
         CORSMiddleware,
@@ -59,6 +61,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.add_middleware(SecurityHeadersMiddleware)
+    app.add_middleware(RateLimitMiddleware)
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(
