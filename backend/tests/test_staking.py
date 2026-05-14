@@ -1,11 +1,18 @@
-from unittest.mock import AsyncMock, patch
+import sys
+from pathlib import Path
 from uuid import uuid4
 
-import pytest
-from httpx import ASGITransport, AsyncClient
+_BACKEND_ROOT = Path(__file__).resolve().parents[1]
+if str(_BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_ROOT))
 
-from app.database.session import get_db_session
-from app.integrations.bittensor.rpc import ChainHead
+from unittest.mock import AsyncMock, patch  # noqa: E402
+
+import pytest  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
+
+from app.database.session import get_db_session  # noqa: E402
+from app.integrations.bittensor.rpc import ChainHead  # noqa: E402
 
 WALLET_ALICE = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
 WALLET_BOB = "5GKh6cqk9RFUcL4oHfNrBYa5C43ioDfrw561dTefqzy8QTWC"
@@ -192,3 +199,7 @@ async def test_submit_staking_transaction_requires_idempotency_key(app, mock_db_
         app.dependency_overrides.clear()
 
     assert response.status_code == 422
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__, "-q"]))

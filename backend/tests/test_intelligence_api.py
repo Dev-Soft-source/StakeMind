@@ -1,9 +1,16 @@
-from unittest.mock import AsyncMock, patch
+import sys
+from pathlib import Path
 
-import pytest
-from httpx import ASGITransport, AsyncClient
+_BACKEND_ROOT = Path(__file__).resolve().parents[1]
+if str(_BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_ROOT))
 
-from app.database.session import get_db_session
+from unittest.mock import AsyncMock, patch  # noqa: E402
+
+import pytest  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
+
+from app.database.session import get_db_session  # noqa: E402
 
 
 @pytest.fixture
@@ -61,14 +68,16 @@ async def test_validator_rankings_returns_paginated_payload(app, mock_db_session
 
 @pytest.mark.asyncio
 async def test_wallet_risk_requires_wallet_scope(app, mock_db_session) -> None:
+    wallet = "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+    other = "5GKh6cqk9RFUcL4oHfNrBYa5C43ioDfrw561dTefqzy8QTWC"
     app.dependency_overrides[get_db_session] = mock_db_session
     try:
         async with app.router.lifespan_context(app):
             transport = ASGITransport(app=app)
             async with AsyncClient(transport=transport, base_url="http://test") as client:
                 response = await client.get(
-                    "/api/v1/wallets/5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY/risk",
-                    headers={"X-Wallet-Address": "5GKh6cqk9RFUcL4oHfNrBYa5C43ioDfrw561dTefqzy8QTWC"},
+                    f"/api/v1/wallets/{wallet}/risk",
+                    headers={"X-Wallet-Address": other},
                 )
     finally:
         app.dependency_overrides.clear()
@@ -106,3 +115,7 @@ async def test_reward_forecast_is_labeled_estimate(app, mock_db_session) -> None
 
     assert response.status_code == 200
     assert response.json()["is_estimate"] is True
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__, "-q"]))

@@ -1,14 +1,18 @@
-import asyncio
 import sys
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
 
-import pytest
-from httpx import ASGITransport, AsyncClient
+_BACKEND_ROOT = Path(__file__).resolve().parents[1]
+if str(_BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_ROOT))
 
-from app.database.session import get_db_session
-from app.ingestion.mvp_sync import CatalogSyncResult, PortfolioSyncResult
-from app.integrations.bittensor.rpc import ChainHead
+from unittest.mock import AsyncMock, MagicMock, patch  # noqa: E402
+
+import pytest  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
+
+from app.database.session import get_db_session  # noqa: E402
+from app.ingestion.mvp_sync import CatalogSyncResult, PortfolioSyncResult  # noqa: E402
+from app.integrations.bittensor.rpc import ChainHead  # noqa: E402
 
 
 def _validator_fixture() -> object:
@@ -221,3 +225,7 @@ async def test_catalog_sync_updates_watermark(app) -> None:
 
     assert response.status_code == 200
     assert response.json()["chain_head"] == 123
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__, "-q"]))

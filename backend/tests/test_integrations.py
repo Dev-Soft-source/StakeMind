@@ -73,3 +73,75 @@ async def test_chain_head_endpoint_returns_block_metadata(app) -> None:
     assert payload["block_number"] == 42
     assert payload["block_hash"] == "0xabc"
     assert payload["chain_name"] == "Bittensor"
+
+
+@pytest.mark.asyncio
+async def test_rpc_call_raises_on_jsonrpc_error_body() -> None:
+    class RpcErrorResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {"jsonrpc": "2.0", "id": 1, "error": {"code": -32000, "message": "server busy"}}
+
+    class FakeClient:
+        async def post(self, url: str, json: dict[str, object]) -> RpcErrorResponse:
+            return RpcErrorResponse()
+
+    client = SubtensorRpcClient(
+        rpc_url="https://example.invalid",
+        timeout_seconds=1.0,
+        max_retries=2,
+        client=FakeClient(),  # type: ignore[arg-type]
+    )
+
+    with pytest.raises(SubtensorRpcError):
+        await client.call("chain_getHeader")
+
+
+@pytest.mark.asyncio
+async def test_fetch_chain_head_rejects_non_dict_header() -> None:
+    class WrongShapeResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {"jsonrpc": "2.0", "id": 1, "result": "not-a-dict"}
+
+    class FakeClient:
+        async def post(self, url: str, json: dict[str, object]) -> WrongShapeResponse:
+            return WrongShapeResponse()
+
+    client = SubtensorRpcClient(
+        rpc_url="https://example.invalid",
+        timeout_seconds=1.0,
+        max_retries=0,
+        client=FakeClient(),  # type: ignore[arg-type]
+    )
+
+    with pytest.raises(SubtensorRpcError, match="Unexpected chain_getHeader"):
+        await client.fetch_chain_head()
+
+
+@pytest.mark.asyncio
+async def test_fetch_chain_head_rejects_invalid_block_number_type() -> None:
+    class BadNumberResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {"jsonrpc": "2.0", "id": 1, "result": {"number": 12345}}
+
+    class FakeClient:
+        async def post(self, url: str, json: dict[str, object]) -> BadNumberResponse:
+            return BadNumberResponse()
+
+    client = SubtensorRpcClient(
+        rpc_url="https://example.invalid",
+        timeout_seconds=1.0,
+        max_retries=0,
+        client=FakeClient(),  # type: ignore[arg-type]
+    )
+
+    with pytest.raises(SubtensorRpcError, match="Missing block number"):
+        await client.fetch_chain_head()

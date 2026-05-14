@@ -159,9 +159,9 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ### Testing
 
-- [ ] Unit: reward math, scoring, RPC adapters (mocked)
-- [ ] Integration: ingestion, API contracts, staking lifecycle
-- [ ] Failure drills: RPC outage, stale indexer, inconsistent chain state
+- [x] Unit: reward math, scoring, RPC adapters (mocked)
+- [x] Integration: ingestion, API contracts, staking lifecycle
+- [x] Failure drills: RPC outage, stale indexer, inconsistent chain state
 
 ### Deployment and operations
 

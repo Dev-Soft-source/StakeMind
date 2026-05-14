@@ -1,11 +1,17 @@
+import sys
 import uuid
+from pathlib import Path
 
-import pytest
-from httpx import ASGITransport, AsyncClient
+_BACKEND_ROOT = Path(__file__).resolve().parents[1]
+if str(_BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_ROOT))
 
-from app.core.config import Settings
-from app.database.session import get_db_session
-from app.main import create_app
+import pytest  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
+
+from app.core.config import Settings  # noqa: E402
+from app.database.session import get_db_session  # noqa: E402
+from app.main import create_app  # noqa: E402
 
 
 @pytest.mark.asyncio
@@ -104,3 +110,7 @@ async def test_wallet_risk_requires_matching_header(app) -> None:
         app.dependency_overrides.clear()
 
     assert response.status_code == 403
+
+
+if __name__ == "__main__":
+    raise SystemExit(pytest.main([__file__, "-q"]))
