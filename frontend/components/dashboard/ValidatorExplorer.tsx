@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
 import { StakingActionModal } from "@/components/staking/StakingActionModal";
+import { useCompareHotkeys } from "@/components/dashboard/CompareHotkeysContext";
 import { PanelCard } from "@/components/ui/PanelCard";
 import { ScoreBadge } from "@/components/ui/ScoreBadge";
 import { StatusRow } from "@/components/ui/StatusRow";
@@ -11,6 +12,7 @@ import { fetchValidator, fetchValidators } from "@/lib/api/dashboard-client";
 import type { Validator } from "@/lib/api/dashboard";
 
 export function ValidatorExplorer() {
+  const { compareHotkeys, toggleCompareHotkey } = useCompareHotkeys();
   const [search, setSearch] = useState("");
   const [subnetId, setSubnetId] = useState("");
   const [sort, setSort] = useState<"score" | "apy" | "hotkey">("score");
@@ -119,6 +121,18 @@ export function ValidatorExplorer() {
             className="mt-4 rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-600"
           >
             Delegate to this validator
+          </button>
+          <button
+            type="button"
+            onClick={() => toggleCompareHotkey(activeValidator.hotkey)}
+            className={[
+              "mt-3 rounded-lg border px-4 py-2 text-sm font-semibold",
+              compareHotkeys.includes(activeValidator.hotkey)
+                ? "border-teal-500 bg-teal-500/10 text-teal-100"
+                : "border-slate-700 text-slate-200 hover:border-slate-500",
+            ].join(" ")}
+          >
+            {compareHotkeys.includes(activeValidator.hotkey) ? "Remove from compare" : "Add to compare"}
           </button>
         </div>
       ) : null}

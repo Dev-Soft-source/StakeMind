@@ -6,6 +6,8 @@ from app.database.models.entities import (
     StakingTransaction,
     Subnet,
     Validator,
+    ValidatorScoreRollup,
+    WalletRiskRollup,
     WalletSession,
 )
 
@@ -17,5 +19,7 @@ __all__ = [
     "StakingTransaction",
     "Subnet",
     "Validator",
+    "ValidatorScoreRollup",
+    "WalletRiskRollup",
     "WalletSession",
 ]

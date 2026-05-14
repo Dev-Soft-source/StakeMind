@@ -98,18 +98,18 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ## Phase 4 — Intelligence layer
 
-- [ ] Validator intelligence engine: scoring, ranking, historical rollups, delegation trends, reputation signals
-- [ ] Reward analytics engine: APY, consistency, trend windows, historical reports
-- [ ] Risk monitoring engine: concentration, downtime, volatility, subnet exposure, alert inputs
-- [ ] Batch jobs: scheduled recompute of scores and aggregates; backfill scripts for history
-- [ ] UI: rankings, risk panels, allocation insights, compare validators, forecasting (labeled as estimates)
+- [x] Validator intelligence engine: scoring, ranking, historical rollups, delegation trends, reputation signals
+- [x] Reward analytics engine: APY, consistency, trend windows, historical reports
+- [x] Risk monitoring engine: concentration, downtime, volatility, subnet exposure, alert inputs
+- [x] Batch jobs: scheduled recompute of scores and aggregates; backfill scripts for history
+- [x] UI: rankings, risk panels, allocation insights, compare validators, forecasting (labeled as estimates)
 
 ### Quality
 
-- [ ] Scoring and risk formulas are documented and covered by unit tests on fixed fixtures
-- [ ] Batch jobs keep rankings and historical aggregates within agreed freshness SLOs
-- [ ] UI labels estimates and limitations clearly; rankings match documented rules
-- [ ] Cache and database design avoid full recompute on every page load
+- [x] Scoring and risk formulas are documented and covered by unit tests on fixed fixtures
+- [x] Batch jobs keep rankings and historical aggregates within agreed freshness SLOs
+- [x] UI labels estimates and limitations clearly; rankings match documented rules
+- [x] Cache and database design avoid full recompute on every page load
 
 **Success:** users get validator comparison, risk context, allocation insights, and performance trends that go beyond a standard staking dashboard.
 

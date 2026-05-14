@@ -72,6 +72,14 @@ class Settings(BaseSettings):
         default=True,
         validation_alias="STAKING_ENABLE_SIMULATION",
     )
+    intelligence_recompute_window_days: int = Field(
+        default=30,
+        validation_alias="INTELLIGENCE_RECOMPUTE_WINDOW_DAYS",
+    )
+    intelligence_cache_ttl_seconds: int = Field(
+        default=300,
+        validation_alias="INTELLIGENCE_CACHE_TTL_SECONDS",
+    )
 
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

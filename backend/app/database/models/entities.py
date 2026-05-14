@@ -5,6 +5,7 @@ from sqlalchemy import (
     BigInteger,
     Boolean,
     DateTime,
+    Float,
     ForeignKey,
     String,
     Text,
@@ -152,3 +153,48 @@ class StakingTransaction(Base, TimestampMixin):
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class ValidatorScoreRollup(Base):
+    __tablename__ = "validator_score_rollups"
+    __table_args__ = (UniqueConstraint("validator_id", name="uq_validator_score_rollups_validator_id"),)
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    validator_id: Mapped[UUID] = mapped_column(ForeignKey("validators.id"), nullable=False)
+    hotkey: Mapped[str] = mapped_column(String(128), nullable=False)
+    subnet_id: Mapped[int] = mapped_column(BigInteger, nullable=False, index=True)
+    as_of_block: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    computed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    composite_score: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    apy_estimate: Mapped[float] = mapped_column(Float, nullable=False)
+    reward_consistency: Mapped[float] = mapped_column(Float, nullable=False)
+    uptime_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    rank_subnet: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    rank_global: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    delegation_trend: Mapped[float] = mapped_column(Float, nullable=False)
+    reputation_signal: Mapped[float] = mapped_column(Float, nullable=False)
+    inputs_json: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    methodology_version: Mapped[str] = mapped_column(String(32), nullable=False)
+
+
+class WalletRiskRollup(Base):
+    __tablename__ = "wallet_risk_rollups"
+    __table_args__ = (UniqueConstraint("wallet_address", name="uq_wallet_risk_rollups_wallet_address"),)
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    wallet_address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    as_of_block: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    computed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    concentration_validator: Mapped[float] = mapped_column(Float, nullable=False)
+    concentration_subnet: Mapped[float] = mapped_column(Float, nullable=False)
+    hhi_validator: Mapped[float] = mapped_column(Float, nullable=False)
+    hhi_subnet: Mapped[float] = mapped_column(Float, nullable=False)
+    reward_volatility: Mapped[float] = mapped_column(Float, nullable=False)
+    downtime_risk_proxy: Mapped[float] = mapped_column(Float, nullable=False)
+    overall_risk_band: Mapped[str] = mapped_column(String(16), nullable=False)
+    inputs_json: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    methodology_version: Mapped[str] = mapped_column(String(32), nullable=False)
