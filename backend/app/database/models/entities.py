@@ -7,6 +7,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Integer,
     String,
     Text,
     UniqueConstraint,
@@ -198,3 +199,86 @@ class WalletRiskRollup(Base):
     overall_risk_band: Mapped[str] = mapped_column(String(16), nullable=False)
     inputs_json: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
     methodology_version: Mapped[str] = mapped_column(String(32), nullable=False)
+
+
+class PremiumInviteCode(Base):
+    __tablename__ = "premium_invite_codes"
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    code: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+    max_redemptions: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    redemptions_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+
+class WalletEntitlement(Base):
+    __tablename__ = "wallet_entitlements"
+
+    wallet_address: Mapped[str] = mapped_column(String(128), primary_key=True)
+    plan: Mapped[str] = mapped_column(String(32), nullable=False)
+    source: Mapped[str] = mapped_column(String(32), nullable=False)
+    invite_code_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("premium_invite_codes.id"), nullable=True
+    )
+    valid_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+    )
+
+
+class AlertRule(Base):
+    __tablename__ = "alert_rules"
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    wallet_address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    rule_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    threshold_json: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    channel: Mapped[str] = mapped_column(String(32), nullable=False)
+    webhook_url: Mapped[str | None] = mapped_column(Text)
+    enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    quiet_hours_start_utc: Mapped[int | None] = mapped_column(Integer)
+    quiet_hours_end_utc: Mapped[int | None] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+    )
+
+
+class AlertDeliveryLog(Base):
+    __tablename__ = "alert_delivery_log"
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    alert_rule_id: Mapped[UUID] = mapped_column(
+        ForeignKey("alert_rules.id", ondelete="CASCADE"), nullable=False
+    )
+    dedupe_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+
+    __table_args__ = (UniqueConstraint("alert_rule_id", "dedupe_key", name="uq_alert_delivery_rule_dedupe"),)
+
+
+class InAppNotification(Base):
+    __tablename__ = "in_app_notifications"
+
+    id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+    wallet_address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(256), nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    alert_rule_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("alert_rules.id", ondelete="SET NULL"), nullable=True
+    )
+    read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )

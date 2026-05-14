@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { CompareHotkeysProvider } from "@/components/dashboard/CompareHotkeysContext";
 import { ForecastPanel } from "@/components/dashboard/ForecastPanel";
+import { PremiumPanel } from "@/components/dashboard/PremiumPanel";
 import { RewardsDashboard } from "@/components/dashboard/RewardsDashboard";
 import { RiskPanel } from "@/components/dashboard/RiskPanel";
 import { StakingPanel } from "@/components/dashboard/StakingPanel";
@@ -19,6 +20,7 @@ type DashboardModule = ComponentType;
 // Reorder rows or move modules between rows to change the dashboard layout.
 const DASHBOARD_ROWS: readonly (readonly DashboardModule[])[] = [
   [WalletBar],
+  [PremiumPanel],
   [ValidatorExplorer, StakingPanel, RewardsDashboard],
   [ValidatorRankingsPanel, RiskPanel, ValidatorComparePanel, ForecastPanel],
 ];
@@ -50,6 +52,7 @@ function DashboardContent() {
       return;
     }
 
+    void queryClient.invalidateQueries({ queryKey: ["wallet-entitlements", walletAddress] });
     void queryClient.invalidateQueries({ queryKey: ["staking", walletAddress] });
     void queryClient.invalidateQueries({ queryKey: ["rewards-summary", walletAddress] });
     void queryClient.invalidateQueries({ queryKey: ["rewards-history", walletAddress] });

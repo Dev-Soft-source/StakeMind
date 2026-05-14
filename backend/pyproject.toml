@@ -8,6 +8,9 @@ select = ["E", "F", "I", "UP"]
 [tool.ruff.lint.per-file-ignores]
 "alembic/versions/*.py" = ["E501"]
 "scripts/*.py" = ["E402"]
+"app/api/v1/premium.py" = ["E501"]
+"app/api/v1/entitlements.py" = ["E501"]
+"app/services/premium/alerts.py" = ["E501"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

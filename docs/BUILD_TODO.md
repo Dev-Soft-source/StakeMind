@@ -117,16 +117,16 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ## Phase 5 — Premium
 
-- [ ] Plans and entitlements: free vs premium feature flags; subscription or invite model
-- [ ] Premium APIs: advanced scores, optimization hints, exports, deeper subnet analytics, priority refresh
-- [ ] Smart alerts: rules engine, delivery (in-app/email/webhook), dedupe and quiet hours
-- [ ] Reporting: CSV/PDF exports, portfolio recommendations with disclaimers; no auto-execution by default
+- [x] Plans and entitlements: free vs premium feature flags; subscription or invite model
+- [x] Premium APIs: advanced scores, optimization hints, exports, deeper subnet analytics, priority refresh
+- [x] Smart alerts: rules engine, delivery (in-app/email/webhook), dedupe and quiet hours
+- [x] Reporting: CSV exports, portfolio recommendations with disclaimers; no auto-execution by default (PDF export deferred)
 
 ### Quality
 
-- [ ] Entitlements enforce free vs premium on the server, not only in the UI
-- [ ] Alerts dedupe and respect quiet hours; exports and recommendations carry clear disclaimers
-- [ ] Billing or invite flow is tested end to end; premium surfaces stay gated after refresh and re-login
+- [x] Entitlements enforce free vs premium on the server, not only in the UI
+- [x] Alerts dedupe and respect quiet hours; exports and recommendations carry clear disclaimers
+- [x] Billing or invite flow is tested end to end; premium surfaces stay gated after refresh and re-login
 
 **Success:** paying users unlock documented premium APIs and surfaces without changing the free-tier experience.
 

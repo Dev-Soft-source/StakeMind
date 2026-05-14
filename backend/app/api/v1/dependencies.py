@@ -1,7 +1,12 @@
-from fastapi import HTTPException, Request, status
+from typing import Annotated
+
+from fastapi import Depends, Header, HTTPException, Request, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import Settings
+from app.database.session import get_db_session
 from app.integrations.bittensor.rpc import SubtensorRpcClient
+from app.services.premium.entitlements import is_wallet_premium
 
 
 def build_rpc_client(settings: Settings, request: Request) -> SubtensorRpcClient:
@@ -20,4 +25,17 @@ def assert_wallet_scope(path_wallet: str, header_wallet: str | None) -> None:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Wallet header does not match requested address",
+        )
+
+
+async def require_premium_scoped_wallet(
+    wallet_address: str,
+    session: Annotated[AsyncSession, Depends(get_db_session)],
+    x_wallet_address: Annotated[str | None, Header(alias="X-Wallet-Address")] = None,
+) -> None:
+    assert_wallet_scope(wallet_address, x_wallet_address)
+    if not await is_wallet_premium(session, wallet_address):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Premium entitlement required",
         )
