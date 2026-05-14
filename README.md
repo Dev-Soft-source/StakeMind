@@ -33,6 +33,10 @@ Do not commit real secrets. `.env` files stay local and are ignored by git.
 
 For API hardening and the non-custodial trust model, see [docs/security-and-trust.md](docs/security-and-trust.md).
 
+For staging/production topology, TLS, backups, monitoring, and runbooks, see [docs/deployment-and-operations.md](docs/deployment-and-operations.md).
+
+For post-MVP growth (landing, public docs, validator research, community channels), see [docs/growth-post-mvp.md](docs/growth-post-mvp.md).
+
 ## Run services without Docker
 
 ### Database migrations

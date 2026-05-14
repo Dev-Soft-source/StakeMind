@@ -165,14 +165,14 @@ Tracked implementation checklist derived from [stakemind_updated_business_and_te
 
 ### Deployment and operations
 
-- [ ] Staging environment mirroring production topology
-- [ ] Production: API behind reverse proxy, TLS, DB backups, Redis persistence policy
-- [ ] Monitoring: uptime, RPC latency, job lag, tx success rate, error tracking (e.g. Sentry)
-- [ ] Runbooks: dependency updates, RPC upgrades, rollback
+- [x] Staging environment mirroring production topology
+- [x] Production: API behind reverse proxy, TLS, DB backups, Redis persistence policy
+- [x] Monitoring: uptime, RPC latency, job lag, tx success rate, error tracking (e.g. Sentry)
+- [x] Runbooks: dependency updates, RPC upgrades, rollback
 
 ### Growth (post-MVP)
 
-- [ ] Landing and docs; validator research content; community channels (X, Discord, GitHub, BitTensor)
+- [x] Landing and docs; validator research content; community channels (X, Discord, GitHub, BitTensor)
 
 ---
 
