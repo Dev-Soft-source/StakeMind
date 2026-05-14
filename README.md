@@ -8,6 +8,8 @@ Validator intelligence and staking optimization platform for the BitTensor ecosy
 - Backend: FastAPI
 - Data: PostgreSQL, Redis
 
+For a **guided walkthrough** (architecture, dashboard layout, and testing stages), see [docs/project-review-guide.md](docs/project-review-guide.md).
+
 ## Local development
 
 1. Copy `.env.example` to `.env` and adjust values if needed.

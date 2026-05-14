@@ -18,6 +18,7 @@ from app.core.config import Settings
 from app.database.session import get_db_session
 from app.ingestion.intelligence_recompute import recompute_intelligence
 from app.ingestion.mvp_sync import fetch_chain_head
+from app.services.cache import CacheService
 from app.services.intelligence.queries import (
     build_reward_forecast,
     compare_validators,
@@ -26,7 +27,6 @@ from app.services.intelligence.queries import (
     list_rankings,
 )
 from app.services.intelligence.scoring import LIMITATIONS
-from app.services.cache import CacheService
 
 router = APIRouter(tags=["intelligence"])
 
@@ -86,7 +86,10 @@ async def compare_validator_intelligence(
     )
 
 
-@router.get("/intelligence/validators/rankings", response_model=PaginatedResponse[ValidatorRankingResponse])
+@router.get(
+    "/intelligence/validators/rankings",
+    response_model=PaginatedResponse[ValidatorRankingResponse],
+)
 async def get_validator_rankings(
     request: Request,
     session: Annotated[AsyncSession, Depends(get_db_session)],
@@ -128,7 +131,12 @@ async def get_validator_rankings(
             total_pages=total_pages,
         ),
     )
-    await cache.set_json("intelligence", payload.model_dump(mode="json"), "rankings", *cache_key_parts)
+    await cache.set_json(
+        "intelligence",
+        payload.model_dump(mode="json"),
+        "rankings",
+        *cache_key_parts,
+    )
     return payload
 
 
@@ -140,7 +148,10 @@ async def get_validator_intelligence_detail(
 ) -> ValidatorIntelligenceResponse:
     row = await get_validator_intelligence(session, hotkey=hotkey, subnet_id=subnet_id)
     if row is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Intelligence rollup not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Intelligence rollup not found",
+        )
     return _to_detail(row)
 
 

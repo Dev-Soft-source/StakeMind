@@ -98,7 +98,10 @@ async def build_staking_transaction(
             ),
         )
     except ValueError as exc:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
     return _to_response(transaction)
 
 
@@ -119,7 +122,10 @@ async def simulate_staking_transaction(
     try:
         transaction = await resimulate_transaction(session, rpc_client, settings, transaction)
     except ValueError as exc:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
     return _to_response(transaction)
 
 
@@ -150,7 +156,10 @@ async def submit_staking_transaction(
             idempotency_key=idempotency_key,
         )
     except ValueError as exc:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
     return _to_response(transaction)
 
 

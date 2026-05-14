@@ -1,6 +1,16 @@
 from fastapi import APIRouter
 
-from app.api.v1 import automation, contracts, dashboard, entitlements, health, integrations, intelligence, premium, staking
+from app.api.v1 import (
+    automation,
+    contracts,
+    dashboard,
+    entitlements,
+    health,
+    integrations,
+    intelligence,
+    premium,
+    staking,
+)
 
 api_router = APIRouter()
 api_router.include_router(health.router)

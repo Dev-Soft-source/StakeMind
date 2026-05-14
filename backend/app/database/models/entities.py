@@ -158,7 +158,12 @@ class StakingTransaction(Base, TimestampMixin):
 
 class ValidatorScoreRollup(Base):
     __tablename__ = "validator_score_rollups"
-    __table_args__ = (UniqueConstraint("validator_id", name="uq_validator_score_rollups_validator_id"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "validator_id",
+            name="uq_validator_score_rollups_validator_id",
+        ),
+    )
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
     validator_id: Mapped[UUID] = mapped_column(ForeignKey("validators.id"), nullable=False)
@@ -182,7 +187,12 @@ class ValidatorScoreRollup(Base):
 
 class WalletRiskRollup(Base):
     __tablename__ = "wallet_risk_rollups"
-    __table_args__ = (UniqueConstraint("wallet_address", name="uq_wallet_risk_rollups_wallet_address"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "wallet_address",
+            name="uq_wallet_risk_rollups_wallet_address",
+        ),
+    )
 
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
     wallet_address: Mapped[str] = mapped_column(String(128), nullable=False, index=True)
@@ -265,7 +275,13 @@ class AlertDeliveryLog(Base):
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
 
-    __table_args__ = (UniqueConstraint("alert_rule_id", "dedupe_key", name="uq_alert_delivery_rule_dedupe"),)
+    __table_args__ = (
+        UniqueConstraint(
+            "alert_rule_id",
+            "dedupe_key",
+            name="uq_alert_delivery_rule_dedupe",
+        ),
+    )
 
 
 class InAppNotification(Base):
@@ -290,7 +306,11 @@ class AutomationPolicy(Base):
     wallet_address: Mapped[str] = mapped_column(String(128), primary_key=True)
     opt_in: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     kill_switch_active: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    max_amount_rao_per_action: Mapped[int] = mapped_column(BigInteger, nullable=False, default=1_000_000_000)
+    max_amount_rao_per_action: Mapped[int] = mapped_column(
+        BigInteger,
+        nullable=False,
+        default=1_000_000_000,
+    )
     max_daily_jobs: Mapped[int] = mapped_column(Integer, nullable=False, default=48)
     allowed_validator_hotkeys: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
     allowed_subnet_ids: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)

@@ -1,7 +1,12 @@
 from sqlalchemy import Select, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.models import RewardSnapshot, Stake, Validator, ValidatorScoreRollup, WalletRiskRollup
+from app.database.models import (
+    RewardSnapshot,
+    Stake,
+    ValidatorScoreRollup,
+    WalletRiskRollup,
+)
 from app.services.intelligence.scoring import (
     LIMITATIONS,
     METHODOLOGY_VERSION,

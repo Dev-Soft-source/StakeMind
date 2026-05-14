@@ -5,7 +5,7 @@ _BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(_BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(_BACKEND_ROOT))
 
-from unittest.mock import AsyncMock  # noqa: E402
+from unittest.mock import AsyncMock, MagicMock  # noqa: E402
 
 import pytest  # noqa: E402
 from sqlalchemy.exc import IntegrityError  # noqa: E402
@@ -15,9 +15,16 @@ from app.ingestion.chain_head import _seed_subnet_catalog, sync_chain_head  # no
 from app.integrations.bittensor.rpc import ChainHead  # noqa: E402
 
 
+def _session_mock() -> AsyncMock:
+    """Async session mock with sync ``add`` (matches real AsyncSession.add)."""
+    session = AsyncMock()
+    session.add = MagicMock()
+    return session
+
+
 @pytest.mark.asyncio
 async def test_sync_chain_head_reuses_existing_run() -> None:
-    session = AsyncMock()
+    session = _session_mock()
     existing = IngestionRun(
         job_name="chain_head_sync",
         idempotency_key="chain-head-sync:0xabc",
@@ -40,7 +47,7 @@ async def test_sync_chain_head_reuses_existing_run() -> None:
 
 @pytest.mark.asyncio
 async def test_seed_subnet_catalog_is_bounded_by_limit() -> None:
-    session = AsyncMock()
+    session = _session_mock()
     session.get = AsyncMock(return_value=None)
 
     seeded = await _seed_subnet_catalog(session, subnet_limit=4)
@@ -51,7 +58,7 @@ async def test_seed_subnet_catalog_is_bounded_by_limit() -> None:
 
 @pytest.mark.asyncio
 async def test_sync_chain_head_seeds_subnets_on_first_run() -> None:
-    session = AsyncMock()
+    session = _session_mock()
     session.scalar = AsyncMock(return_value=None)
     session.get = AsyncMock(return_value=None)
     rpc_client = AsyncMock()
@@ -88,7 +95,7 @@ async def test_sync_chain_head_handles_flush_integrity_race() -> None:
         chain_head=10,
         status="succeeded",
     )
-    session = AsyncMock()
+    session = _session_mock()
     session.scalar = AsyncMock(side_effect=[None, existing])
     session.flush = AsyncMock(side_effect=IntegrityError("stmt", None, Exception("dup")))
     session.rollback = AsyncMock()
